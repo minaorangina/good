@@ -17,7 +17,6 @@ var routes = (function(server){
         handler: function (request, reply) {
             var name = request.params.name ? encodeURIComponent(request.params.name) : "world";
             console.log("routes.js says: We got a request!");
-            request.log('getting something...'); // for analytics request to work
             reply.view("index", {data : name});
 
         }
@@ -70,21 +69,13 @@ var routes = (function(server){
         method: 'GET',
         path: '/analytics',
         handler: function (request, reply) {
-            // var result = "";
-            // var clicks = 0;
-            // var allClicks = 0;
-            // db.forEach(function(e){                                                                        console.log(e);
-            //     for (var key in e){
-            //         result += key + " " + e[key] + "\n";
-            //     }
-            // });
-            // var now = Date.now();
-            // db.forEach(function(e){
-            //     allClicks++;
-            //     if (e.timestamp >= now - 300000){ // 5 mins
-            //         clicks++;
-            //     }
-            // });
+            var obj = {};
+
+            for (var key in db){
+                obj.key = db[key].toString();
+            }
+
+
 
             reply.view("analytics", {users : db});
         }
