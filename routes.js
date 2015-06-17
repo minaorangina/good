@@ -1,6 +1,6 @@
 
 var routes = (function(server){
-    var db = {};
+    var db = require('level')('./mydb');
 
     // server.route({
     //     method: 'GET',
@@ -48,14 +48,44 @@ var routes = (function(server){
         // used by good-http
         method: 'POST',
         path: '/analytics',
-        handler: function (request, reply) {
-            console.log("should push to database");
-            db.put(request.payload.events.request[0].timestamp, request.payload.events.request[0].id, function (err) {
-                if (err){
-                    console.log('Ooops!', err);
-                }
-            });
+        // handler: function (request, reply) {
+        //     var object = request.payload.events.request[0];
+        //     console.log("should push to database");
+        //
+        //     db.put(object.tags[0], object.timestamp, function(err){
+        //         if (err){
+        //             console.log("darn");
+        //         }
+        //     });
+        //
+        // },
 
+        handler : function (request, reply){
+            var object = request.payload.events.request[0];
+            db.get(object.tags[0], function (err, value) {
+                if (err) {
+                    if (err.notFound) {
+                        db.put(object.tags[0], object.timestamp, function(err){
+                            if (err){
+                                console.log("darn");
+                            }
+                        });
+                        return;
+                    }
+                    // I/O or other error, pass it up the callback chain
+                    return callback(err);
+                }
+                else {
+                    db.put(object.tags[0], (value + "," + object.timestamp), function(err){
+                        if(err){
+                            console.log("that didn't work.");
+                            console.log(err);
+                        }
+                    });
+                }
+
+  // .. handle `value` here
+});
         }
     });
 
@@ -64,16 +94,40 @@ var routes = (function(server){
         method: 'GET',
         path: '/analytics',
         handler: function (request, reply) {
-            var obj = {};
+            var result = [];
 
-            for (var key in db){
-                obj.key = db[key].toString();
-            }
+            db.createReadStream()
+            .on('data', function (data) {
+                result.push(data);
+            })
+            .on('end', function () {
+                console.log(result);
+                var final = {};
+                result.forEach(function(e){
+                    console.log(e.key);
+                    final[e.key] = e.value;
+                });
+                console.log(final);
+                var counter = 1;
+                for (var key in final){
+                    var split = final[key].split(",");
+                    counter = split.length;
+
+                    final[key] = counter;
+                }
+                console.log(final);
+                reply.view("analytics", {data : final});
+            });
 
 
-
-            reply.view("analytics", {users : db});
         }
+
+
+
+
+
+
+
     });
 
 });

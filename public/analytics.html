@@ -5,18 +5,13 @@
         <title></title>
     </head>
     <body>
-        <p>Number of visits: {{data}}</p>
         <p>Number of clicks in last 5 minutes: {{clicks}}</p>
-        <p>Total number of clicks: {{allClicks}}</p>
-
-        {{#each users}}
-        <p>Name of users: {{@key}} :
-
-
-                {{this}}</p>
+        <p>Total number of clicks:
+            {{#each data}}
+            {{@key}} : {{this}}
+            {{/each}}</p>
 
 
-        {{/each}}
         <script src="analytics.js"></script>
     </body>
 </html>
