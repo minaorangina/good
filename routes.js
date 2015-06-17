@@ -49,17 +49,12 @@ var routes = (function(server){
         method: 'POST',
         path: '/analytics',
         handler: function (request, reply) {
-            var obj = request.payload.events.request[0];
-            if (obj.path !== "/favicon.ico"){
-                console.log(request.payload.events.request[0]);
-
-                if (db.hasOwnProperty(obj.tags[0])){
-                    db[obj.tags[0]].push(obj.timestamp);
+            console.log("should push to database");
+            db.put(request.payload.events.request[0].timestamp, request.payload.events.request[0].id, function (err) {
+                if (err){
+                    console.log('Ooops!', err);
                 }
-                else{
-                    db[obj.tags[0]] = [obj.timestamp];
-                }
-            }
+            });
 
         }
     });
