@@ -1,7 +1,28 @@
 var Hapi = require('hapi'),
     Good = require('good'),
+    Path = require('path'),
     server = new Hapi.Server();
+    // server = new Hapi.Server({
+    //     connections : {
+    //         routes : {
+    //             files : {
+    //                 relativeTo : Path.join(__dirname, 'public')
+    //             }
+    //
+    //         }
+    //     }
+    // });
 
+server.views({
+    engines : {
+        html : require('handlebars')
+    },
+    //relativeTo : __dirname,
+    path : Path.join(__dirname, 'public'),
+    // path : "templates",
+    // helpersPath : "helpers"
+
+});
 
 server.connection({ port: 3000 });
 

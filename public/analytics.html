@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <p>Number of visits: {{data}}</p>
+        <p>Number of clicks in last 5 minutes: {{clicks}}</p>
+        <p>Total number of clicks: {{allClicks}}</p>
+
+        {{#each users}}
+        <p>Name of users:{{@key}} :
+
+            {{#each this}}
+                {{this}}</p>
+            {{/each}}
+
+        {{/each}}
+        <script src="analytics.js"></script>
+    </body>
+</html>
