@@ -3,14 +3,14 @@
 ##What?
 It's a plugin for Hapi.  You use it to log various details of requests and responses in your Hapi server.  Almost like putting a load of `console.log()`s in your code, but far less horrible.
 
-There are three 'reporters' in Good.  Think of them as flavours:
+There are three 'reporters' in Good.  The reporter is responsible for listening for the data you want to log.  
 + [good-http](https://github.com/hapijs/good-http)
 + [good-file](https://github.com/hapijs/good-file)
 + [good-console](https://github.com/hapijs/good-console)
 
-The reporter is responsible for listening for the data you want to log.
 
-All three reporters log the same stuff.  You choose the reporter that will log your data in your preferred format:
+
+All three reporters log the same stuff.  Think of them as flavours - you choose the reporter that will log your data in your preferred format:
 
 + **good-file** will report back in a local file  
 + **good-console** will report to the console  
@@ -24,7 +24,7 @@ There are 5 event listeners in Good, which all correspond to Hapi events.
 2. **request** listens for `request.log()` events.  Corresponds to *request* in Hapi...
 3. **response** corresponds to:
     + *tail* in Hapi, which occurs once a request process has ended??
-    + *response* in Hapi, which occurs when a response it sent back to the client
+    + *response* in Hapi, which occurs when a response is sent back to the client
 4. **error** listens for errors.  Corresponds to *request-error* in Hapi...
 5. **wreck** ... ???
 
@@ -40,9 +40,9 @@ The server is initialised within the callback.
     var Server = require('hapi');
     var options = {
                     reporters: [
-                        reporterObj,
-                        reporterObj,
-                        reporterObj
+                        *good-http object*,
+                        *good-file object*,
+                        *good-console object*
                     ]
                 }
 
@@ -54,3 +54,17 @@ The server is initialised within the callback.
                         server.log('info', 'Server running at: ' + server.info.uri);
                     });
     });
+
+ The structure of the reporter object
+
+     {
+         reporter: require('good-http'),
+         events: { request: "*" },
+         config: {
+             endpoint : 'http://localhost:3000/analytics',
+             threshold: 0
+             // ,wreck: {
+             //     headers: { 'x-api-key' : 12345 }
+             // }
+         }
+     }
