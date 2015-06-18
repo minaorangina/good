@@ -2,16 +2,19 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>Analytics</title>
+        <link href='http://fonts.googleapis.com/css?family=Philosopher' rel='stylesheet' type='text/css'>
+        <link href='style.css' rel='stylesheet' type='text/css'>
     </head>
     <body>
-        <p>Number of clicks in last 5 minutes: {{clicks}}</p>
-        <p>Total number of clicks:
-            {{#each data}}
-            {{@key}} : {{this}}
-            {{/each}}</p>
-
-
-        <script src="analytics.js"></script>
+        <div id="container">
+            <h1>Unique user logins:<h1>
+            <ul>
+                {{#each data}}
+                <li>{{@key}} : {{this}}</li>
+                {{/each}}
+            </ul>
+        </div>
+        <script src="../analytics.js"></script>
     </body>
 </html>

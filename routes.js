@@ -1,15 +1,6 @@
 
 var routes = (function(server){
     var db = require('level')('./mydb');
-
-    // server.route({
-    //     method: 'GET',
-    //     path: '/',
-    //     handler: function (request, reply) {
-    //         reply('Hello, world!');
-    //     }
-    // });
-
     // could use this for user auth
     server.route({
         method: 'GET',
@@ -18,18 +9,15 @@ var routes = (function(server){
             var name = request.params.name ? encodeURIComponent(request.params.name) : "world";
             console.log("routes.js says: We got a request!");
             reply.view("index", {data : name});
-
         }
     });
-
+//
     server.route({
         method: 'POST',
         path: '/login',
         handler: function (request, reply) {
             request.log(request.payload.login);
-            // request.log(request.params.name);
-            // reply("welcome, " + request.params.name);
-            reply(request.payload.login);
+            reply.view("loggedin", {name : request.payload.login});
         }
     });
 
@@ -37,29 +25,14 @@ var routes = (function(server){
         method: 'GET',
         path: '/login',
         handler: function (request, reply) {
-                                                                                    console.log("routes.js says: login/{name}");
-            // request.log(request.params.name);
-            // reply("welcome, " + request.params.name);
             reply.file("./public/login.html");
         }
     });
-
+//
     server.route({
         // used by good-http
         method: 'POST',
         path: '/analytics',
-        // handler: function (request, reply) {
-        //     var object = request.payload.events.request[0];
-        //     console.log("should push to database");
-        //
-        //     db.put(object.tags[0], object.timestamp, function(err){
-        //         if (err){
-        //             console.log("darn");
-        //         }
-        //     });
-        //
-        // },
-
         handler : function (request, reply){
             var object = request.payload.events.request[0];
             db.get(object.tags[0], function (err, value) {
@@ -83,8 +56,6 @@ var routes = (function(server){
                         }
                     });
                 }
-
-  // .. handle `value` here
 });
         }
     });
@@ -121,13 +92,6 @@ var routes = (function(server){
 
 
         }
-
-
-
-
-
-
-
     });
 
 });

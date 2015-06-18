@@ -1,34 +1,20 @@
 var Hapi = require('hapi'),
     Good = require('good'),
     Path = require('path'),
+    Handlebars = require('handlebars'),
     server = new Hapi.Server();
-    // server = new Hapi.Server({
-    //     connections : {
-    //         routes : {
-    //             files : {
-    //                 relativeTo : Path.join(__dirname, 'public')
-    //             }
-    //
-    //         }
-    //     }
-    // });
 
 server.views({
     engines : {
-        html : require('handlebars')
+        html : Handlebars,
     },
-    //relativeTo : __dirname,
     path : Path.join(__dirname, 'public'),
-    // path : "templates",
-    // helpersPath : "helpers"
+    helpersPath : "helpers"
 
 });
-
 server.connection({ port: 3000 });
 
 var routes = require('./routes')(server);
-
-
 
 // passes into the plugin
 var options = {
@@ -44,22 +30,15 @@ var options = {
             config : {
                         endpoint : 'http://localhost:3000/analytics',
                         threshold : 0,
-                        // wreck : {
-                        //     //???
-                        // }
                      }
         },
-        // {
-        //     reporter : require('good-console'),
-        //     events : { ops : "*" }
-        // }
     ]
 };
 
 // actually plug in the plugin
 server.register({ register: Good, options: options }, function (err) {
         if (err) {
-            throw err; // something bad happened loading the plugin
+            throw err;
         }
         server.start(function () {
             server.log('info', 'Server running at: ' + server.info.uri);
